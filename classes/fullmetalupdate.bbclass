@@ -21,6 +21,7 @@ python __anonymous() {
     config.read(config_file)
 
     hawkbit_vendor_name = config['client']['hawkbit_vendor_name']
+    hawkbit_url_host = config['client']['hawkbit_url_host']
     hawkbit_url_port = config['client']['hawkbit_url_port']
     hawkbit_ssl = config['client'].getboolean('hawkbit_ssl', fallback=False)
     ostree_name_remote = config['ostree']['ostree_name_remote']
@@ -28,17 +29,16 @@ python __anonymous() {
     ostree_ssl = config['ostree'].getboolean('ostree_ssl', fallback=False)
     ostree_url_host = config['ostree']['ostree_url_host']
     ostree_url_port = config['ostree']['ostree_url_port']
-    ostreepush_ssh_port = config['ostree']['ostreepush_ssh_port']
     ostreepush_ssh_user = config['ostree']['ostreepush_ssh_user']
     ostreepush_ssh_host = config['ostree']['ostreepush_ssh_host']
+    ostreepush_ssh_port = config['ostree']['ostreepush_ssh_port']
     ostreepush_ssh_path = config['ostree']['ostreepush_ssh_path']
     ostreepush_ssh_pwd = config['ostree']['ostreepush_ssh_pwd']
-    hawkbit_hostname = "hawkbit"
 
     if hawkbit_ssl:
-        hawkbit_http_address = "https://" + hawkbit_hostname + ":" + hawkbit_url_port
+        hawkbit_http_address = "https://" + hawkbit_url_host + ":" + hawkbit_url_port
     else:
-        hawkbit_http_address = "http://" + hawkbit_hostname + ":" + hawkbit_url_port
+        hawkbit_http_address = "http://" + hawkbit_url_host + ":" + hawkbit_url_port
 
     if ostree_ssl:
         ostree_http_address = "https://" + ostree_url_host + ":" + ostree_url_port
@@ -51,7 +51,6 @@ python __anonymous() {
     d.setVar('HAWKBIT_URL_PORT', hawkbit_url_port)
     d.setVar('HAWKBIT_SSL', hawkbit_ssl)
     d.setVar('OSTREE_OSNAME', ostree_name_remote)
-    d.setVar('HAWKBIT_HOSTNAME', hawkbit_hostname)
     d.setVar('OSTREE_URL_PORT', ostree_url_port)
     d.setVar('OSTREEPUSH_SSH_PORT', ostreepush_ssh_port)
     d.setVar('OSTREEPUSH_SSH_USER', ostreepush_ssh_user)
