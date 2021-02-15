@@ -44,7 +44,11 @@ python __anonymous() {
     else:
         hawkbit_http_address = "http://" + hawkbit_hostname + ":" + hawkbit_url_port
 
-    ostree_http_distant_address = "http://" + ostree_url_host + ":" + ostree_url_port
+    if ostree_ssl:
+        ostree_http_distant_address = "https://" + ostree_url_host + ":" + ostree_url_port
+    else:
+        ostree_http_distant_address = "http://" + ostree_url_host + ":" + ostree_url_port
+
     ostree_ssh_address = "ssh://" + ostreepush_ssh_user + "@" + ostree_hostname + ":" + ostreepush_ssh_port + "/ostree/repo"
 
     d.setVar('HAWKBIT_VENDOR_NAME', hawkbit_vendor_name)
