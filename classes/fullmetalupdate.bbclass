@@ -34,20 +34,15 @@ python __anonymous() {
     hawkbit_hostname = "hawkbit"
     ostree_hostname = "ostree"
 
-    if ostree_ssl:
-        ostree_http_address = "https://" + ostree_hostname + ":" + ostree_url_port
-    else:
-        ostree_http_address = "http://" + ostree_hostname + ":" + ostree_url_port
-
     if hawkbit_ssl:
         hawkbit_http_address = "https://" + hawkbit_hostname + ":" + hawkbit_url_port
     else:
         hawkbit_http_address = "http://" + hawkbit_hostname + ":" + hawkbit_url_port
 
     if ostree_ssl:
-        ostree_http_distant_address = "https://" + ostree_url_host + ":" + ostree_url_port
+        ostree_http_address = "https://" + ostree_url_host + ":" + ostree_url_port
     else:
-        ostree_http_distant_address = "http://" + ostree_url_host + ":" + ostree_url_port
+        ostree_http_address = "http://" + ostree_url_host + ":" + ostree_url_port
 
     ostree_ssh_address = "ssh://" + ostreepush_ssh_user + "@" + ostree_hostname + ":" + ostreepush_ssh_port + "/ostree/repo"
 
@@ -62,7 +57,6 @@ python __anonymous() {
     d.setVar('OSTREEPUSH_SSH_USER', ostreepush_ssh_user)
     d.setVar('OSTREEPUSH_SSH_PWD', ostreepush_ssh_pwd)
     d.setVar('OSTREE_HTTP_ADDRESS', ostree_http_address)
-    d.setVar('OSTREE_HTTP_DISTANT_ADDRESS', ostree_http_distant_address)
     d.setVar('OSTREE_SSH_ADDRESS', ostree_ssh_address)
     d.setVar('HAWKBIT_HTTP_ADDRESS', hawkbit_http_address)
 
