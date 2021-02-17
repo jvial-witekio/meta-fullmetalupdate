@@ -29,6 +29,7 @@ python __anonymous() {
     ostree_ssl = config['ostree'].getboolean('ostree_ssl', fallback=False)
     ostree_url_host = config['ostree']['ostree_url_host']
     ostree_url_port = config['ostree']['ostree_url_port']
+    ostree_url_path = config['ostree'].get('ostree_url_path', fallback='')
     ostreepush_ssh_user = config['ostree']['ostreepush_ssh_user']
     ostreepush_ssh_host = config['ostree']['ostreepush_ssh_host']
     ostreepush_ssh_port = config['ostree']['ostreepush_ssh_port']
@@ -41,9 +42,9 @@ python __anonymous() {
         hawkbit_http_address = "http://" + hawkbit_url_host + ":" + hawkbit_url_port
 
     if ostree_ssl:
-        ostree_http_address = "https://" + ostree_url_host + ":" + ostree_url_port
+        ostree_http_address = "https://" + ostree_url_host + ":" + ostree_url_port + ostree_url_path
     else:
-        ostree_http_address = "http://" + ostree_url_host + ":" + ostree_url_port
+        ostree_http_address = "http://" + ostree_url_host + ":" + ostree_url_port + ostree_url_path
 
     ostree_ssh_address = "ssh://" + ostreepush_ssh_user + "@" + ostreepush_ssh_host + ":" + ostreepush_ssh_port + ostreepush_ssh_path
 
