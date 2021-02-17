@@ -30,11 +30,14 @@ python __anonymous() {
     ostree_url_host = config['ostree']['ostree_url_host']
     ostree_url_port = config['ostree']['ostree_url_port']
     ostree_url_path = config['ostree'].get('ostree_url_path', fallback='')
-    ostreepush_ssh_user = config['ostree']['ostreepush_ssh_user']
-    ostreepush_ssh_host = config['ostree']['ostreepush_ssh_host']
-    ostreepush_ssh_port = config['ostree']['ostreepush_ssh_port']
-    ostreepush_ssh_path = config['ostree']['ostreepush_ssh_path']
-    ostreepush_ssh_pwd = config['ostree']['ostreepush_ssh_pwd']
+    ostreepush_method = config['ostree'].get('ostreepush_method', fallback='ostreepush')
+    if ostreepush_method == 'ostreepush':
+        ostreepush_ssh_user = config['ostree']['ostreepush_ssh_user']
+        ostreepush_ssh_host = config['ostree']['ostreepush_ssh_host']
+        ostreepush_ssh_port = config['ostree']['ostreepush_ssh_port']
+        ostreepush_ssh_path = config['ostree']['ostreepush_ssh_path']
+        ostreepush_ssh_pwd = config['ostree']['ostreepush_ssh_pwd']
+        ostree_ssh_address = "ssh://" + ostreepush_ssh_user + "@" + ostreepush_ssh_host + ":" + ostreepush_ssh_port + ostreepush_ssh_path
 
     if hawkbit_ssl:
         hawkbit_http_address = "https://" + hawkbit_url_host + ":" + hawkbit_url_port
@@ -46,18 +49,16 @@ python __anonymous() {
     else:
         ostree_http_address = "http://" + ostree_url_host + ":" + ostree_url_port + ostree_url_path
 
-    ostree_ssh_address = "ssh://" + ostreepush_ssh_user + "@" + ostreepush_ssh_host + ":" + ostreepush_ssh_port + ostreepush_ssh_path
-
     d.setVar('HAWKBIT_VENDOR_NAME', hawkbit_vendor_name)
     d.setVar('HAWKBIT_URL_PORT', hawkbit_url_port)
     d.setVar('HAWKBIT_SSL', hawkbit_ssl)
     d.setVar('OSTREE_OSNAME', ostree_name_remote)
     d.setVar('OSTREE_URL_PORT', ostree_url_port)
-    d.setVar('OSTREEPUSH_SSH_PORT', ostreepush_ssh_port)
-    d.setVar('OSTREEPUSH_SSH_USER', ostreepush_ssh_user)
-    d.setVar('OSTREEPUSH_SSH_PWD', ostreepush_ssh_pwd)
+    d.setVar('OSTREEPUSH_METHOD', ostreepush_method)
+    if ostreepush_method == 'ostreepush':
+        d.setVar('OSTREEPUSH_SSH_PWD', ostreepush_ssh_pwd)
+        d.setVar('OSTREE_SSH_ADDRESS', ostree_ssh_address)
     d.setVar('OSTREE_HTTP_ADDRESS', ostree_http_address)
-    d.setVar('OSTREE_SSH_ADDRESS', ostree_ssh_address)
     d.setVar('HAWKBIT_HTTP_ADDRESS', hawkbit_http_address)
 
     d.setVar('OSTREE_MIRROR_PULL_RETRIES', "10")
@@ -86,8 +87,10 @@ ostree_push() {
     local ostree_repo="$1"
     local ostree_branch="$2"
 
-    bbnote "Push the build result to the remote OSTREE"
-    sshpass -p ${OSTREEPUSH_SSH_PWD} ostree-push --repo ${ostree_repo} ${OSTREE_SSH_ADDRESS} ${ostree_branch}
+    bbnote "Push the build result to the remote OSTREE using ${OSTREEPUSH_METHOD} method"
+    if [ "${OSTREEPUSH_METHOD}" = "ostreepush" ]; then
+        sshpass -p ${OSTREEPUSH_SSH_PWD} ostree-push --repo ${ostree_repo} ${OSTREE_SSH_ADDRESS} ${ostree_branch}
+    fi
 }
 
 ostree_pull() {
