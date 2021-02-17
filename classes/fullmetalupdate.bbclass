@@ -90,6 +90,10 @@ ostree_push() {
     bbnote "Push the build result to the remote OSTREE using ${OSTREEPUSH_METHOD} method"
     if [ "${OSTREEPUSH_METHOD}" = "ostreepush" ]; then
         sshpass -p ${OSTREEPUSH_SSH_PWD} ostree-push --repo ${ostree_repo} ${OSTREE_SSH_ADDRESS} ${ostree_branch}
+    elif [ "${OSTREEPUSH_METHOD}" = "azcopy" ]; then
+        azcopy sync ${ostree_repo} ${OSTREE_HTTP_ADDRESS} --recursive=true
+    else
+        bbwarn "Unknown method to push to OSTREE remote: ${OSTREEPUSH_METHOD}"
     fi
 }
 
@@ -116,7 +120,12 @@ ostree_pull_mirror() {
         counter_retry=$(expr $counter_retry + 1)
         bbnote "OsTree pull counter retry: ${counter_retry}"
         $(ostree pull ${ostree_branch} ${ostree_branch} --depth=${ostree_depth} --mirror --repo=${ostree_repo} 2>&1 | grep -q ${lookup}) 
-	done 
+    done
+
+    # In case we use azcopy, we won't modify the distant configuration on the distant itself
+    if [ "${OSTREEPUSH_METHOD}" = "azcopy" ]; then
+        ostree_remote_delete ${ostree_repo} ${ostree_branch}
+    fi
 }
 
 ostree_revparse() {
