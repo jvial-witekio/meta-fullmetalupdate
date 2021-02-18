@@ -91,7 +91,7 @@ ostree_push() {
     if [ "${OSTREEPUSH_METHOD}" = "ostreepush" ]; then
         sshpass -p ${OSTREEPUSH_SSH_PWD} ostree-push --repo ${ostree_repo} ${OSTREE_SSH_ADDRESS} ${ostree_branch}
     elif [ "${OSTREEPUSH_METHOD}" = "azcopy" ]; then
-        azcopy sync ${ostree_repo} ${OSTREE_HTTP_ADDRESS} --recursive=true
+        azcopy sync ${ostree_repo} "${OSTREE_HTTP_ADDRESS}" --recursive=true
     else
         bbwarn "Unknown method to push to OSTREE remote: ${OSTREEPUSH_METHOD}"
     fi
@@ -140,7 +140,7 @@ ostree_remote_add() {
     local ostree_branch="$2"
     local ostree_http_address="$3"
 
-    ostree remote add --no-gpg-verify ${ostree_branch} ${ostree_http_address} --repo=${ostree_repo}
+    ostree remote add --no-gpg-verify ${ostree_branch} "${ostree_http_address}" --repo=${ostree_repo}
 }
 
 ostree_remote_delete() {
@@ -163,7 +163,7 @@ ostree_remote_add_if_not_present() {
     local ostree_http_address="$3"
 
     if ! ostree_is_remote_present ${ostree_repo} ${ostree_branch}; then
-        ostree_remote_add ${ostree_repo} ${ostree_branch} ${ostree_http_address}
+        ostree_remote_add ${ostree_repo} ${ostree_branch} "${ostree_http_address}"
     fi
 }
 

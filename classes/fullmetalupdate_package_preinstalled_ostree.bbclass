@@ -47,7 +47,7 @@ do_create_containers_package() {
 
     for container in ${PREINSTALLED_CONTAINERS_LIST}; do
         bbnote "Add a remote for ostree : ${container} ${OSTREE_HTTP_ADDRESS} ${IMAGE_ROOTFS}"
-        ostree_remote_add ${IMAGE_ROOTFS}/ostree_repo ${container} ${OSTREE_HTTP_ADDRESS}
+        ostree_remote_add ${IMAGE_ROOTFS}/ostree_repo ${container} "${OSTREE_HTTP_ADDRESS}"
         bbnote "Pull the container: remote ${container} branch name ${container} from the repo"
         ostree_pull ${IMAGE_ROOTFS}/ostree_repo ${container} ${OSTREE_CONTAINER_PULL_DEPTH}
         echo ${container} >> ${IMAGE_ROOTFS}/${IMAGE_NAME}-containers.manifest

@@ -14,7 +14,7 @@ do_pull_remote_ostree_image() {
     ostree_init_if_non_existent ${OSTREE_REPO} archive-z2
 
     # Add missing remotes
-    ostree_remote_add_if_not_present ${OSTREE_REPO} ${OSTREE_BRANCHNAME} ${OSTREE_HTTP_ADDRESS}
+    ostree_remote_add_if_not_present ${OSTREE_REPO} ${OSTREE_BRANCHNAME} "${OSTREE_HTTP_ADDRESS}"
 
     #Pull locally the remote repo
     set +e
